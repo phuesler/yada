@@ -1,0 +1,3 @@
+module Yada
+  # Your code goes here...
+end
