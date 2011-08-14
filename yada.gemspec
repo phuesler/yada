@@ -13,6 +13,8 @@ Gem::Specification.new do |s|
   s.description = "Receive data, yada yada yada dashboard"
   s.rubyforge_project = "yada"
 
+  s.add_dependency 'em-websocket'
+
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
