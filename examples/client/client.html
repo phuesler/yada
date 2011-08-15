@@ -1,39 +1,26 @@
 <html>
   <head>
     <script src='js/vendor/jquery-1.6.2.min.js'></script>
-    <script>
-      $(document).ready(function(){
-        function debug(str){ $("#debug").append("<p>"+str+"</p>"); };
- 
-        ws = new WebSocket("ws://localhost:8080");
-        ws.onmessage = function(evt) {
-          var data = evt.data;
-          var rawMessages = data.split("\r\n");
-          rawMessages.forEach(function(rawMessage){
-            try{
-              if(rawMessage && rawMessage.length > 0){
-                var content = JSON.parse(rawMessage);
-                var previous = parseInt($("#msg").html());
-                var next = content.value + previous
-                $('#msg').html(next);
-              }
-            }
-            catch(err)
-            {
-              console.log(rawMessage);
-              console.log(err);
-            }
-          });
-        };
-        ws.onclose = function() { debug("socket closed"); };
-        ws.onopen = function() {
-          debug("connected...");
-        };
-      });
-    </script>
+    <script src='js/app.js'></script>
+    <style>     
+    body {
+    font-family: "Verdana";
+    text-align: center;
+    }
+
+    div {
+       margin-left: auto;
+       margin-right: auto;
+     }
+
+     #usersOnline {
+        font-size: 200pt;
+    }
+    </style>
   </head>
   <body>
-    <div id="debug"></div>
-    <div id="msg">0</div>
+    <div id="usersOnline">
+      0
+    </div>
   </body>
 </html>
