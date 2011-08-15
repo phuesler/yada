@@ -1,12 +1,30 @@
 <html>
   <head>
-    <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js'></script>
+    <script src='js/vendor/jquery-1.6.2.min.js'></script>
     <script>
       $(document).ready(function(){
         function debug(str){ $("#debug").append("<p>"+str+"</p>"); };
  
         ws = new WebSocket("ws://localhost:8080");
-        ws.onmessage = function(evt) { $("#msg").append("<p>"+evt.data+"</p>"); };
+        ws.onmessage = function(evt) {
+          var data = evt.data;
+          var rawMessages = data.split("\r\n");
+          rawMessages.forEach(function(rawMessage){
+            try{
+              if(rawMessage && rawMessage.length > 0){
+                var content = JSON.parse(rawMessage);
+                var previous = parseInt($("#msg").html());
+                var next = content.value + previous
+                $('#msg').html(next);
+              }
+            }
+            catch(err)
+            {
+              console.log(rawMessage);
+              console.log(err);
+            }
+          });
+        };
         ws.onclose = function() { debug("socket closed"); };
         ws.onopen = function() {
           debug("connected...");
@@ -16,7 +34,6 @@
   </head>
   <body>
     <div id="debug"></div>
-    <div id="msg"></div>
+    <div id="msg">0</div>
   </body>
 </html>
-
