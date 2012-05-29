@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Test it</title>
+  </head>
+  <body>
+    <h1>Dashboard</h1>
+    <div id="events"></div>
+    <script>
+      // Open up an event source socket
+      var source = new EventSource('http://localhost:4567/evented');
+      var eventsContainer = document.getElementById('events');
+
+      // Custom user events, except for message which
+      // is the default
+
+      source.addEventListener('message', function(e) {
+        writeMessage("normal message:" + e.data);
+      }, false);
+
+      source.addEventListener('login', function(e) {
+        writeMessage("login: " + e.data);
+      }, false);
+
+      source.addEventListener('loginError', function(e) {
+        writeMessage("login error: " + e.data);
+      }, false);
+
+      // Connection handling listeners
+
+      source.addEventListener('open', function(e) {
+        writeMessage('event source opnened');
+      }, false);
+
+      source.addEventListener('error', function(e) {
+        writeMessage('received an error');
+      }, false);
+
+
+      // small utility function to access a dom element
+      function writeMessage(message){
+        var previousContent = eventsContainer.innerText;
+        eventsContainer.innerText = previousContent  + "\n" + message;
+      }
+
+
+    </script>
+
+  </body>
+</html>
