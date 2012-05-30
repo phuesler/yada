@@ -46,20 +46,17 @@ class UdpServer
   PORT = '3333'
 
   def self.run
-    EM.run do
-      # hit Control + C to stop
-      Signal.trap("INT")  { EventMachine.stop }
-      Signal.trap("TERM") { EventMachine.stop }
-      EM::open_datagram_socket(HOST, PORT, Handler)
-    end
+     EM::open_datagram_socket(HOST, PORT, Handler)
   end
 end
 
 
 # Start up sinatra and 
 if __FILE__ == $PROGRAM_NAME
-  web = Thread.new{ WebApp.run! }
-  udp = Thread.new{ sleep(2); UdpServer.run }
-  web.join
-  udp.join
+  EM.run do
+    WebApp.run!
+    UdpServer.run
+    Signal.trap("INT")  { EventMachine.stop }
+    Signal.trap("TERM") { EventMachine.stop }
+  end
 end
