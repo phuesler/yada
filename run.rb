@@ -10,8 +10,12 @@ class WebApp < Sinatra::Base
   # send the message to all connected clients
   def self.send_event(event = {:event => 'message', :data => 'test'})
     connections.each do |c|
-      c << "event: #{event[:event]}\n"
-      c << "data: #{event[:data]}\n\n"
+      if c.closed
+        connections.delete(c)
+      else
+        c << "event: #{event[:event]}\n"
+        c << "data: #{event[:data]}\n\n"
+      end
     end
   end
 
@@ -46,7 +50,7 @@ class UdpServer
   PORT = '3333'
 
   def self.run
-     EM::open_datagram_socket(HOST, PORT, Handler)
+    EM::open_datagram_socket(HOST, PORT, Handler)
   end
 end
 
